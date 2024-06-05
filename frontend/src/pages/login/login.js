@@ -42,6 +42,7 @@ const LoginContainer = ({ className }) => {
 			email: '',
 			password: '',
 		},
+		mode:'onChange',
 		resolver: yupResolver(authFormSchema),
 	});
 	const emailError = errors.email?.message;

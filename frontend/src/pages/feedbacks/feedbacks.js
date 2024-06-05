@@ -5,13 +5,17 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button } from '../../components';
 
+const feedbackFormSchema = yup.object().shape({
+	name: yup.string().required('Введите имя'),
+	text: yup.string().required('Введите отзыв').max(400,"Отзыв не более 400 символов"),
+	rating:yup.number().required('Поставьте оценку'),
+});
 
 const AllFeedbacks = styled.div`
 	padding: 5px;
 	display: flex;
 	flex-wrap: wrap;
 	width: 95%;
-
 	height: 600px;
 	overflow: auto;
 	box-shadow: 0px -2px 17px #000;
@@ -64,101 +68,123 @@ const StarBox = styled.div`
 `;
 
 const NewFeedback = styled.form`
+	margin-top:20px;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-around;
 	align-items: center;
 	height: 500px;
 	width: 90%;
-	border: 2px solid red;
 `;
 const FormField = styled.div`
 	display: flex;
 	flex-direction: row;
 	height: auto;
 	width: 100%;
-	border: 2px solid green;
 `;
 
-const TextField = styled.div`
-	display: flex;
-	flex-direction: row;
-	height: 200px;
-	width: 100%;
-	border: 2px solid green;
-`;
 const Title = styled.div`
 	text-align: start;
 	height: 100%;
 	width: 150px;
-	border: 2px solid orange;
 `;
 
 const Content = styled.div`
 	height: 100%;
 	width: 100%;
-	border: 2px solid green;
 `;
 
 const InputForm = styled.input`
 	height: 45px;
 	font-size: 30px;
 	width: 100%;
+	&:focus {
+		background-color: #FFF5EE;}
 `;
 const TextAreaForm = styled.textarea`
 	height: 200px;
 	font-size: 30px;
 	width: 100%;
+	&:focus {
+		background-color: #FFF5EE;}
 `;
 
 const RatingForm = styled.input`
 	height: 45px;
 	font-size: 30px;
 	width: 150px;
+	&::-webkit-keygen-select{
+    background: black;
+    color: red;}
+
 `;
 
+const ErrorForm=styled.div`
+	font-size:25px;
+	color:red;
+`
+
 const FeedbacksContainer = ({ className }) => {
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm({
+		defaultValues: {
+			name: '',
+			text: '',
+			rating:10
+		},
+		mode:'onChange',
+		resolver: yupResolver(feedbackFormSchema),
+	});
+
+	const nameError = errors.name?.message;
+	const textError = errors.text?.message;
+	const ratingError = errors.rating?.message;
+
 	const [feedbacks, setFeedbacks] = useState([]);
 	const stars = Array(10).fill('star');
 
-	console.log(stars);
+	function getFeedbacks(){
+		fetch('/feedback/get')
+		.then((response) => response.json())
+		.then((res) => {
+			setFeedbacks(res);
+		})
+		.catch((e) => console.log('Ошибка get....', e.message));
+	}
 
 	useEffect(() => {
 		console.log('useEffect');
-		fetch('/feedback/get')
-			.then((response) => response.json())
-			.then((res) => {
-				setFeedbacks(res);
-			})
-			.catch((e) => console.log('Ошибка get....', e.message));
+		getFeedbacks()
 	}, []);
 
-	function postFeedbacks() {
+	function postFeedback(formData) {
 		fetch('feedback/send', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json;charset=utf-8',
 			},
 			body: JSON.stringify({
-				name: 'NATA',
-				text: 'Для современного мира социально-экономическое развитие прекрасно подходит для реализации первоочередных требований. А ещё сделанные на базе интернет-аналитики выводы лишь',
-				rating: '9',
+				name: formData.name,
+				text:  formData.text,
+				rating:  formData.rating,
 			}),
 		})
-			.then((response) => response.text())
-			.then((json) => console.log(json))
+			.then((response) => response.json())
+			.then((json) => getFeedbacks())
 
-			.catch((e) => console.log('Ошибка fetch....', e.message));
+			.catch((e) => console.log('Ошибка POST....', e.message));
 	}
 
-	const onPost = () => {
-		postFeedbacks();
-	};
-
-	console.log(feedbacks);
-	feedbacks.forEach((element) => {
-		console.log(element.name);
-	});
+	const onSubmit = (formData) => {
+		console.log(
+			JSON.stringify(
+				formData
+			));
+		postFeedback(formData);
+	}
 
 	return (
 		<div className={className}>
@@ -186,19 +212,32 @@ const FeedbacksContainer = ({ className }) => {
 					);
 				})}
 			</AllFeedbacks>
-			<NewFeedback>
+			<NewFeedback onSubmit={handleSubmit(onSubmit)}>
+
 				<FormField>
 					<Title>Имя*:</Title>
 					<Content>
-						<InputForm></InputForm>
+						<InputForm
+						type="text"
+						name="name"
+						autoComplete='off'
+						{...register('name',{required:'Укажите имя'})}
+						/>
 					</Content>
-				</FormField>
+					</FormField>
+					{nameError && <ErrorForm>{nameError}</ErrorForm>}
 				<FormField>
 					<Title>Отзыв*:</Title>
 					<Content>
-						<TextAreaForm></TextAreaForm>
+						<TextAreaForm
+						type="text"
+						name="text"
+						autoComplete="off"
+						{...register('text',{required:'Оставте отзыв'})}
+						/>
 					</Content>
 				</FormField>
+				{textError && <ErrorForm>{textError}</ErrorForm>}
 				<FormField>
 					<Title>Рейтинг*:</Title>
 					<Content>
@@ -208,12 +247,14 @@ const FeedbacksContainer = ({ className }) => {
 							max="10"
 							maxwidth="200px"
 							type="number"
+							name='rating'
 							step="1"
+							{...register('rating')}
 						></RatingForm>
 					</Content>
 				</FormField>
-				<Button width="200px" onClick={onPost}>
-					POST
+				<Button width="250px"  type="submit" disabled={!!nameError || !!textError}>
+					ОПУБЛИКОВАТЬ
 				</Button>
 			</NewFeedback>
 		</div>
