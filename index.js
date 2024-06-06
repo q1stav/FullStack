@@ -3,7 +3,6 @@ const chalk = require("chalk");
 const path = require("path");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
-const { addNode, getNotes, removeNote, editNote } = require("./notes.controller");
 const { register, login, getMe } = require("./controllers/userController");
 const { feedbackSend,feedbackGet}=require("./controllers/feedBackController")
 const { loginValidation } = require("./validations/auth");
@@ -11,7 +10,6 @@ const { feedbackValidation } = require("./validations/feedbackValidation");
 const auth = require("./middleware/auth");
 const cors = require("cors");
 const checkAuth = require("./utils/checkAuth");
-const { features } = require("process");
 
 const port = 3001;
 const app = express();
@@ -44,133 +42,133 @@ app.post("/feedback/send", feedbackValidation ,feedbackSend)
 
 app.get("/feedback/get",feedbackGet)
 
-// console.log(req.body);
-// res.json({'message':'Form Submited'})
+// // console.log(req.body);
+// // res.json({'message':'Form Submited'})
 
-// app.get("/login", async (req, res) => {
-//   res.render("login", {
+// // app.get("/login", async (req, res) => {
+// //   res.render("login", {
+// //     title: "Express App",
+// //     error: undefined,
+// //   });
+// // });
+
+// // app.get("/register", async (req, res) => {
+// //   res.render("register", {
+// //     title: "Express App",
+// //     error: undefined,
+// //   });
+// // });
+// // app.post("/login", async (req, res) => {
+// //   try {
+// //     const token = await loginUser(req.body.email, req.body.password);
+// //     res.cookie("token", token, { httpOnly: true });
+// //     res.redirect("/");
+// //   } catch (e) {
+// //     res.render("login", {
+// //       title: "Express App",
+// //       error: e.message,
+// //     });
+// //   }
+// // });
+
+// // app.post("/register", async (req, res) => {
+// //   try {
+// //     await addUser(req.body.email, req.body.password);
+// //     res.redirect("/login");
+// //   } catch (e) {
+// //     if (e.code === 11000) {
+// //       res.render("register", {
+// //         title: "Express App",
+// //         error: "Email is alredy registered",
+// //       });
+// //       return;
+// //     }
+// //     res.render("register", {
+// //       title: "Express App",
+// //       error: e.message,
+// //     });
+// //   }
+// // });
+
+// // app.get("/logout", async (req, res) => {
+// //   res.cookie("token", "", { httpOnly: true });
+// //   res.redirect("/login");
+// // });
+
+// app.use(auth);
+
+// app.get("/getNotes", async (req, res) => {
+//   res.render("index", {
 //     title: "Express App",
-//     error: undefined,
+//     notes: await getNotes(),
+//     userEmail: req.user.email,
+//     created: false,
+//     error: false,
 //   });
 // });
 
-// app.get("/register", async (req, res) => {
-//   res.render("register", {
-//     title: "Express App",
-//     error: undefined,
-//   });
-// });
-// app.post("/login", async (req, res) => {
+// app.post("/", async (req, res) => {
 //   try {
-//     const token = await loginUser(req.body.email, req.body.password);
-//     res.cookie("token", token, { httpOnly: true });
-//     res.redirect("/");
-//   } catch (e) {
-//     res.render("login", {
+//     await addNode(req.body.title, req.user.email);
+//     res.render("index", {
 //       title: "Express App",
+//       notes: await getNotes(),
+//       userEmail: req.user.email,
+//       created: true,
+//       error: false,
+//     });
+//   } catch (e) {
+//     console.log("Creation error:", e);
+//     res.render("index", {
+//       title: "Express App",
+//       notes: await getNotes(),
+//       userEmail: req.user.email,
+//       created: false,
+//       error: true,
+//     });
+//   }
+// });
+
+// app.delete("/:id", async (req, res) => {
+//   try {
+//     await removeNote(req.params.id);
+//     res.render("index", {
+//       title: "Express App",
+//       notes: await getNotes(),
+//       userEmail: req.user.email,
+//       created: false,
+//       error: false,
+//     });
+//   } catch (e) {
+//     res.render("index", {
+//       title: "Express App",
+//       notes: await getNotes(),
+//       userEmail: req.user.email,
+//       created: false,
 //       error: e.message,
 //     });
 //   }
 // });
 
-// app.post("/register", async (req, res) => {
+// app.put("/:id", async (req, res) => {
 //   try {
-//     await addUser(req.body.email, req.body.password);
-//     res.redirect("/login");
-//   } catch (e) {
-//     if (e.code === 11000) {
-//       res.render("register", {
-//         title: "Express App",
-//         error: "Email is alredy registered",
-//       });
-//       return;
-//     }
-//     res.render("register", {
+//     await editNote(req.params.id, req.body.title);
+//     res.render("index", {
 //       title: "Express App",
+//       notes: await getNotes(),
+//       userEmail: req.user.email,
+//       created: false,
+//     });
+//   } catch (e) {
+//     res.render("index", {
+//       title: "Express App",
+//       notes: await getNotes(),
+//       userEmail: req.user.email,
+//       created: false,
 //       error: e.message,
 //     });
 //   }
 // });
-
-// app.get("/logout", async (req, res) => {
-//   res.cookie("token", "", { httpOnly: true });
-//   res.redirect("/login");
-// });
-
-app.use(auth);
-
-app.get("/getNotes", async (req, res) => {
-  res.render("index", {
-    title: "Express App",
-    notes: await getNotes(),
-    userEmail: req.user.email,
-    created: false,
-    error: false,
-  });
-});
-
-app.post("/", async (req, res) => {
-  try {
-    await addNode(req.body.title, req.user.email);
-    res.render("index", {
-      title: "Express App",
-      notes: await getNotes(),
-      userEmail: req.user.email,
-      created: true,
-      error: false,
-    });
-  } catch (e) {
-    console.log("Creation error:", e);
-    res.render("index", {
-      title: "Express App",
-      notes: await getNotes(),
-      userEmail: req.user.email,
-      created: false,
-      error: true,
-    });
-  }
-});
-
-app.delete("/:id", async (req, res) => {
-  try {
-    await removeNote(req.params.id);
-    res.render("index", {
-      title: "Express App",
-      notes: await getNotes(),
-      userEmail: req.user.email,
-      created: false,
-      error: false,
-    });
-  } catch (e) {
-    res.render("index", {
-      title: "Express App",
-      notes: await getNotes(),
-      userEmail: req.user.email,
-      created: false,
-      error: e.message,
-    });
-  }
-});
-
-app.put("/:id", async (req, res) => {
-  try {
-    await editNote(req.params.id, req.body.title);
-    res.render("index", {
-      title: "Express App",
-      notes: await getNotes(),
-      userEmail: req.user.email,
-      created: false,
-    });
-  } catch (e) {
-    res.render("index", {
-      title: "Express App",
-      notes: await getNotes(),
-      userEmail: req.user.email,
-      created: false,
-      error: e.message,
-    });
-  }
-});
 
 mongoose
   .connect(

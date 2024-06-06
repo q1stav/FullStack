@@ -191,9 +191,8 @@ const FeedbacksContainer = ({ className }) => {
 			<AllFeedbacks>
 				{feedbacks.map((feedback) => {
 					return (
-						<Feedback>
+						<Feedback key={feedback._id}>
 							<Name>{feedback.name}</Name>
-
 							<Text>{feedback.text}</Text>
 							<StarBox>
 								{stars.map((value, index) => {

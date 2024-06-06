@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button } from '../../components';
-import { Navigate, useNavigate } from 'react-router-dom';
+
 
 const authFormSchema = yup.object().shape({
 	email: yup.string().email('Введите email. Пример: user@email.com'),
