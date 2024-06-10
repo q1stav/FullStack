@@ -5,9 +5,9 @@ const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const { register, login, getMe } = require("./controllers/userController");
 const { feedbackSend,feedbackGet}=require("./controllers/feedBackController")
+const {vacancySend}=require("./controllers/vacancyController")
 const { loginValidation } = require("./validations/auth");
 const { feedbackValidation } = require("./validations/feedbackValidation");
-const auth = require("./middleware/auth");
 const cors = require("cors");
 const checkAuth = require("./utils/checkAuth");
 
@@ -28,19 +28,22 @@ app.use(
   })
 );
 
-app.get("/Test", async (req, res) => {
-  res.send("Hello");
-});
-
 app.post("/auth/register", loginValidation, register);
 
 app.post("/auth/login", login);
 
 app.get("/auth/me", checkAuth, getMe);
 
+
+
 app.post("/feedback/send", feedbackValidation ,feedbackSend)
 
 app.get("/feedback/get",feedbackGet)
+
+
+
+app.post("vacancy/send",vacancyValidation,vacancySend)
+
 
 // // console.log(req.body);
 // // res.json({'message':'Form Submited'})

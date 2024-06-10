@@ -6,6 +6,12 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Button } from '../../components';
 import PhoneInput from 'react-phone-input-2'
 
+const vacancyFormSchema = yup.object().shape({
+	name: yup.string().required('Введите имя').max(20,"Не более 2 0 символов"),
+	phone: yup.string().required('Введите Телефон').length(11,"Введите корректный номер телефона"),
+	position:yup.string().required("Укажите должность"),
+});
+
 
 const H1=styled.h1`
 	font-size:90px;
@@ -77,6 +83,7 @@ const VacancyContainer = ({ className }) => {
 
 
 	return(
+		
 
 		<div className={className}>
 			<H1>РАБОТАЙТЕ С НАМИ!</H1>
