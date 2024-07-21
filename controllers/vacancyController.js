@@ -28,5 +28,10 @@ const vacancySend = async (req, res) => {
     }
   };
 
+  const vacancyGet=async(req,res)=>{
+    const vacancies=await Vacancy.find();
+    res.send(vacancies)
+  }
 
-  module.exports={vacancySend}
+
+  module.exports={vacancySend,vacancyGet}

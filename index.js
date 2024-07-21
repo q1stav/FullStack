@@ -4,10 +4,11 @@ const path = require("path");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const { register, login, getMe } = require("./controllers/userController");
-const { feedbackSend,feedbackGet}=require("./controllers/feedBackController")
-const {vacancySend}=require("./controllers/vacancyController")
+const { feedbackSend, feedbackGet } = require("./controllers/feedBackController");
+const { vacancySend, vacancyGet } = require("./controllers/vacancyController");
 const { loginValidation } = require("./validations/auth");
 const { feedbackValidation } = require("./validations/feedbackValidation");
+const { vacancyValidation } = require("./validations/vacancyValidation");
 const cors = require("cors");
 const checkAuth = require("./utils/checkAuth");
 
@@ -34,16 +35,12 @@ app.post("/auth/login", login);
 
 app.get("/auth/me", checkAuth, getMe);
 
+app.post("/feedback/send", feedbackValidation, feedbackSend);
 
+app.get("/feedback/get", feedbackGet);
 
-app.post("/feedback/send", feedbackValidation ,feedbackSend)
-
-app.get("/feedback/get",feedbackGet)
-
-
-
-app.post("vacancy/send",vacancyValidation,vacancySend)
-
+app.get("/vacancy/get", vacancyGet);
+app.post("/vacancy/sendVac", vacancyValidation, vacancySend);
 
 // // console.log(req.body);
 // // res.json({'message':'Form Submited'})

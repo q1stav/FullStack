@@ -14,8 +14,10 @@ const VacancySchema=mongoose.Schema({
         require:true,
     },
     date: {
-        type:Date, 
-        default: Date.now
+        type:String,
+        require:true,
+        // type:Date, 
+        // default: Date.now
     }
 });
 
