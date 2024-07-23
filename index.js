@@ -6,9 +6,11 @@ const cookieParser = require("cookie-parser");
 const { register, login, getMe } = require("./controllers/userController");
 const { feedbackSend, feedbackGet } = require("./controllers/feedBackController");
 const { vacancySend, vacancyGet } = require("./controllers/vacancyController");
+const { reserveSend, reserveGet } = require("./controllers/reserveController");
 const { loginValidation } = require("./validations/auth");
 const { feedbackValidation } = require("./validations/feedbackValidation");
 const { vacancyValidation } = require("./validations/vacancyValidation");
+const { reserveValidation } = require("./validations/reserveValidation");
 const cors = require("cors");
 const checkAuth = require("./utils/checkAuth");
 
@@ -32,15 +34,16 @@ app.use(
 app.post("/auth/register", loginValidation, register);
 
 app.post("/auth/login", login);
-
 app.get("/auth/me", checkAuth, getMe);
 
 app.post("/feedback/send", feedbackValidation, feedbackSend);
-
 app.get("/feedback/get", feedbackGet);
 
 app.get("/vacancy/get", vacancyGet);
 app.post("/vacancy/sendVac", vacancyValidation, vacancySend);
+
+app.get("/reserve/get", reserveGet);
+app.post("/reserve/sendRes", reserveValidation, reserveSend);
 
 // // console.log(req.body);
 // // res.json({'message':'Form Submited'})

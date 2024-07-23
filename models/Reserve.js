@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const VacancySchema=mongoose.Schema({
+const ReserveSchema=mongoose.Schema({
     name:{
         type:String,
         require:true,
@@ -9,16 +9,20 @@ const VacancySchema=mongoose.Schema({
         type:String,
         require:true,
     },
-    position:{
+    guests:{
+        type:Number,
+        require:true,
+    },
+    booking:{
         type:String,
         require:true,
     },
-    date: {
+    date:{
         type:String,
         require:true,
     }
 });
 
-const Vacancy=mongoose.model("Vacancy",VacancySchema);
+const Reserve=mongoose.model("Reserve", ReserveSchema);
 
-module.exports=Vacancy;
+module.exports=Reserve;
