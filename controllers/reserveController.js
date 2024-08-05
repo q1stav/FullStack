@@ -10,7 +10,7 @@ const reserveSend = async (req, res) => {
 
     const doc = new Reserve({
       name: req.body.name,
-      phone: req.body.name,
+      phone: req.body.phone,
       guests: req.body.guests,
       booking:req.body.booking,
       date: req.body.date,

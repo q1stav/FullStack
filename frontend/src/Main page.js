@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import { Header, Footer } from './components';
 import styled from 'styled-components';
-import { Feedbacks, Login } from './pages';
+import { Feedbacks, Login, Reserve } from './pages';
 import { Vacancy } from './pages/vacancys/vacancys';
 
 const Content = styled.div`
@@ -29,7 +29,7 @@ export const MainPage = () => {
 					<Route path="/register" element={<div>Регистрация</div>} />
 					<Route path="/users" element={<div>Пользователи</div>} />
 					<Route path="/menu" element={<div>MENU</div>} />
-					<Route path="/reservation" element={<div>reservation</div>} />
+					<Route path="/reservation" element={<Reserve />} />
 					<Route path="/feedback" element={<Feedbacks />} />
 					<Route path="/vacancy" element={<div><Vacancy /></div>} />
 					<Route path="*" element={<div>Ошибка</div>} />
